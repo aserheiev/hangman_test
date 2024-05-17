@@ -53,6 +53,11 @@ public class Main {
             }
             System.out.println("");
 
+            for (int i = 0; i < incorrectLetters.size(); i++) {
+                System.out.print(incorrectLetters.get(i) + " ");
+            }
+            System.out.println("");
+
             System.out.println("Enter letter");
 
             String letterInput = input.nextLine().toLowerCase();
