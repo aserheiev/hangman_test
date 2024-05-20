@@ -33,14 +33,18 @@ public class Main {
 
         word = topicData.ChooseWord(auswahl - 1);
 
+        int maxVersuche = word.length();
+
         versuche = word.length();
 
         System.out.println(word);
 
-        // topicData.DrawHangman();
+        // topicData.StoreHangman();
         boolean guessed = false;
 
         while (!guessed && versuche > 0) {
+
+            topicData.DrawHangman(maxVersuche, versuche);
 
             String wordProgress = word;
 
@@ -102,8 +106,8 @@ public class Main {
                     guessed = false;
                 }
             }
-
         }
+        topicData.DrawHangman(maxVersuche, versuche);
         System.out.println("ITS OVER");
     }
 
