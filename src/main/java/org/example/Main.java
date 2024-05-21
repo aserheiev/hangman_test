@@ -100,7 +100,7 @@ public class Main {
                 System.out.println(ANSI_GREEN + "CORRECT" + ANSI_RESET);
                 correctLetters.add(letter);
             } else {
-                System.out.println(ANSI_RED + "WRONG IDIOT" + ANSI_RESET);
+                System.out.println(ANSI_RED + "WRONG" + ANSI_RESET);
                 incorrectLetters.add(letter);
                 versuche--;
                 System.out.println(ANSI_YELLOW + "Remaining tries: " + versuche + ANSI_RESET);
