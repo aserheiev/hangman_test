@@ -6,8 +6,18 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+
     public static void main(String[] args) throws IOException {
 
+        System.out.println(ANSI_CYAN + "Welcome to HANGMAN" + ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "Choose your topic..." + ANSI_RESET);
         PlayGame();
 
     }
@@ -29,23 +39,19 @@ public class Main {
 
         auswahl = GetValue(choiceCount);
 
-        System.out.println("Your random word is: ");
-
         word = topicData.ChooseWord(auswahl - 1);
 
         int maxVersuche = word.length();
 
         versuche = word.length();
 
-        System.out.println(word);
-
         // topicData.StoreHangman();
         boolean guessed = false;
 
         while (!guessed && versuche > 0) {
-
+            System.out.print(ANSI_RED);
             topicData.DrawHangman(maxVersuche, versuche);
-
+            System.out.print(ANSI_RESET);
             String wordProgress = word;
 
             for (int i = 0; i < wordProgress.length(); i++) {
@@ -67,11 +73,11 @@ public class Main {
             String letterInput = input.nextLine().toLowerCase();
 
             if (letterInput.length() > 1) {
-                System.out.println("Too long by far");
+                System.out.println(ANSI_RED + "Too long by far" + ANSI_RESET);
                 continue;
             } else {
                 if (letterInput.length() < 1) {
-                    System.out.println("Too short by far");
+                    System.out.println(ANSI_RED + "Too short by far" + ANSI_RESET);
                     continue;
                 }
             }
@@ -79,7 +85,7 @@ public class Main {
             char letter = letterInput.charAt(0);
 
             if (incorrectLetters.contains(letter) || correctLetters.contains(letter)) {
-                System.out.println("Duplicate letter!");
+                System.out.println(ANSI_RED + "Duplicate letter!" + ANSI_RESET);
                 continue;
             }
 
@@ -91,13 +97,13 @@ public class Main {
                 }
             }
             if (matchFound) {
-                System.out.println("CORRECT");
+                System.out.println(ANSI_GREEN + "CORRECT" + ANSI_RESET);
                 correctLetters.add(letter);
             } else {
-                System.out.println("WRONG IDIOT");
+                System.out.println(ANSI_RED + "WRONG IDIOT" + ANSI_RESET);
                 incorrectLetters.add(letter);
                 versuche--;
-                System.out.println("Remaining tries: " + versuche);
+                System.out.println(ANSI_YELLOW + "Remaining tries: " + versuche + ANSI_RESET);
             }
 
             guessed = true;
@@ -107,14 +113,19 @@ public class Main {
                 }
             }
         }
+
+        System.out.print(ANSI_RED);
         topicData.DrawHangman(maxVersuche, versuche);
-        System.out.println("ITS OVER");
+        System.out.println("ITS OVER" + ANSI_RESET);
+
+        if (guessed) {
+            System.out.println(ANSI_CYAN + "YOU ARE WINNER!!!!" + ANSI_RESET);
+        }
     }
 
     public static void PrintState(int versuche) {
         System.out.println("Remaining tries: " + versuche);
     }
-
 
     public static int GetValue(int bound) {
         int zahl = 0;
@@ -125,13 +136,13 @@ public class Main {
             try {
                 zahl = Integer.parseInt(input.nextLine());
                 if (zahl < 1 || zahl > bound) {
-                    System.out.println("Please select one of the options");
+                    System.out.println(ANSI_YELLOW + "Please select one of the options" + ANSI_RESET);
                 } else {
                     return zahl;
                 }
             } catch (Exception e) {
                 // Zahl ist keine Zahl
-                System.out.println("Give me a real number chief");
+                System.out.println(ANSI_YELLOW + "Give me a real number chief" + ANSI_RESET);
             }
         }
 
