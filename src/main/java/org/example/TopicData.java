@@ -12,31 +12,31 @@ public class TopicData {
 
     private List<List<String>> topicList;
 
-    private String seven = " ------------  \n" +
-            " |          |  \n" +
-            " |          |  \n" +
-            " |          |  \n" +
-            " |          |  \n" +
-            " |          |  \n" +
-            " |          |  \n" +
-            " |          |  \n" +
-            " |          O  \n" +
-            " |         /|\\ \n" +
-            " |         / \\ \n" +
-            "---            ";
+    private String seven = " ------------\n" +
+            " |          |\n" +
+            " |          |\n" +
+            " |          |\n" +
+            " |          |\n" +
+            " |          |\n" +
+            " |          |\n" +
+            " |          O\n" +
+            " |         /|\\\n" +
+            " |         / \\\n" +
+            " |            \n" +
+            " |            \n" +
+            "---           ";
 
     private String[][] hangman = StoreHangman();
 
     public TopicData() throws IOException {
         topicList = FillDataList();
-        StoreHangman();
     }
 
     private List<List<String>> FillDataList() throws IOException {
         String fileData = "";
         List<List<String>> topicList = new ArrayList<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\AntonSerheiev\\Desktop\\topics.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\user\\Pictures\\topics.txt"))) {
             StringBuilder sb = new StringBuilder();
             String line = reader.readLine();
 
@@ -53,7 +53,6 @@ public class TopicData {
 
         String[] topics = fileData.split("\r\n");
 
-
         for (String s : topics) {
             topicList.add(Arrays.stream(s.split(",")).toList());
         }
@@ -61,7 +60,6 @@ public class TopicData {
         return topicList;
 
     }
-
 
     public int PrintTopicList() {
         int i = 0;
@@ -88,11 +86,11 @@ public class TopicData {
 
         if (splits.length % 2 != 0) {
             hangman[0] = new String[splits.length / 2];
-            hangman[1] = new String[splits.length / 2];
-            hangman[2] = new String[splits.length / 2 + 1];
-            hangman[3] = new String[splits.length / 3];
+            hangman[1] = new String[splits.length / 2 + 1];
+            hangman[2] = new String[splits.length / 2];
+            hangman[3] = new String[splits.length / 2 + 1];
         } else {
-            hangman = new String[4][splits.length/2];
+            hangman = new String[4][splits.length / 2];
         }
 
         int position = 0;
@@ -118,23 +116,73 @@ public class TopicData {
     public void DrawHangman(int maxVersuche, int versuche) {
         int overallPercentage = 100 - (int) (((float) versuche / (float) maxVersuche) * 100);
         int[] quadrantPercentages = {0, 0, 0, 0};
-        String[] currentHangman = new String[hangman[0].length + hangman[2].length];
+        String[] currentHangman = new String[hangman[0].length + hangman[1].length];
 
         Arrays.fill(currentHangman, "");
 
         // determines how many lines to fill in each quadrant based on the overall overallPercentage
-        for (int i = 0; i < 4; i++) {
-            if (overallPercentage >= 25) {
-                quadrantPercentages[i] = hangman[0].length;
+        // this STILL assumes uniform length
+
+        for (int i = 1; i >= 0; i--) {
+            if(overallPercentage > 25) {
+                quadrantPercentages[i] = hangman[i].length;
                 overallPercentage -= 25;
             } else {
-                quadrantPercentages[i] = (int) Math.ceil(((float) overallPercentage / 25f) * hangman[0].length);
-                break;
+                quadrantPercentages[i] = (int) Math.ceil(((float) overallPercentage / 25f) * hangman[i].length);
+                overallPercentage = 0;
             }
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 2; i < 4; i++) {
+            if(overallPercentage > 25) {
+                quadrantPercentages[i] = hangman[i].length;
+                overallPercentage -= 25;
+            } else {
+                quadrantPercentages[i] = (int) Math.ceil(((float) overallPercentage / 25f) * hangman[i].length);
+                overallPercentage = 0;
+            }
+        }
 
+
+        for (int quadrantPercentage : quadrantPercentages) {
+            System.out.println(quadrantPercentage);
+        }
+
+        int position = (hangman[0].length + hangman[1].length) - 1;
+
+        // draw the first two quadrants backwards
+
+        for (int i = 1; i >= 0; i--) {
+            for (int j = hangman[i].length - 1; j >= 0; j--) {
+                if (quadrantPercentages[i] > 0) {
+                    currentHangman[position] += hangman[i][j];
+                    quadrantPercentages[i]--;
+                    position--;
+                } else {
+                    for (int k = 0; k < hangman[i][j].length(); k++) {
+                        currentHangman[position] += " ";
+                    }
+                    position--;
+                }
+            }
+        }
+
+        // reset the position and draw the remaining two quadrants normally
+        position = 0;
+
+        for (int i = 2; i < 4; i++) {
+            for (int j = 0; j < hangman[i].length; j++) {
+                if (quadrantPercentages[i] > 0) {
+                    currentHangman[position] += hangman[i][j];
+                    quadrantPercentages[i]--;
+                    position++;
+                } else {
+                    for (int k = 0; k < hangman[i][j].length(); k++) {
+                        currentHangman[position] += " ";
+                    }
+                    position++;
+                }
+            }
         }
 
         for (String s : currentHangman) {
@@ -142,7 +190,5 @@ public class TopicData {
         }
 
     }
-
-
 }
 
