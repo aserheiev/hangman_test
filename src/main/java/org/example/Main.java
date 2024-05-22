@@ -119,7 +119,7 @@ public class Main {
         System.out.println("ITS OVER" + ANSI_RESET);
 
         if (guessed) {
-            System.out.println(ANSI_CYAN + "YOU ARE WINNER!!!!" + ANSI_RESET);
+            System.out.println(ANSI_CYAN + "YOU WIN" + ANSI_RESET);
         }
     }
 
